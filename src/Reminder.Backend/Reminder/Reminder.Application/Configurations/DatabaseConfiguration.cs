@@ -1,6 +1,6 @@
 ﻿namespace Reminder.Application.Configurations;
 
-public class DatabaseSettings
+public class DatabaseConfiguration
 {
     public static readonly string ConfigurationKey = "Database";
     

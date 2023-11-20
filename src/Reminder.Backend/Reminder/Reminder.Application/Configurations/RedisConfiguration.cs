@@ -1,6 +1,6 @@
 ﻿namespace Reminder.Application.Configurations;
 
-public class RedisSettings
+public class RedisConfiguration
 {
     public static readonly string ConfigurationKey = "Redis";
     
