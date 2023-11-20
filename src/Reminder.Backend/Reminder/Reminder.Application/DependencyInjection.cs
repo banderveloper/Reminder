@@ -1,6 +1,13 @@
-﻿namespace Reminder.Application;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-public class DependencyInjection
+namespace Reminder.Application;
+
+public static class DependencyInjection
 {
-    
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        // todo
+        
+        return services;
+    }
 }
