@@ -9,4 +9,5 @@ public interface IApplicationDbContext
     DbSet<DisposablePrompt> DisposablePrompts { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    
 }
