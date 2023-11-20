@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reminder.Application", "Rem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reminder.Persistence", "Reminder.Persistence\Reminder.Persistence.csproj", "{EE344B73-A032-45B1-9F0A-7AA8E752939A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{C1D75EE0-270B-4ED1-AB34-86461B8F2A15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reminder.WebApp", "Reminder.WebApp\Reminder.WebApp.csproj", "{C1D75EE0-270B-4ED1-AB34-86461B8F2A15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
