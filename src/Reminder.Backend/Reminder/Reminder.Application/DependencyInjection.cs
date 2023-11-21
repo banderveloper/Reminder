@@ -14,6 +14,7 @@ public static class DependencyInjection
 
         services.AddSingleton<JwtProvider>();
         services.AddSingleton<CookieProvider>();
+        services.AddSingleton<EncryptionProvider>();
         
         return services;
     }

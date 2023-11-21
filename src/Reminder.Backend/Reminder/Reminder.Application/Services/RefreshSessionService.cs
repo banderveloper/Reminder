@@ -2,7 +2,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Reminder.Application.Configurations;
-using Reminder.Application.DTOs;
 using Reminder.Application.Interfaces.Services;
 using Reminder.Domain.Entities.Cache;
 
@@ -19,11 +18,10 @@ public class RefreshSessionService : IRefreshSessionService
         _refreshSessionConfiguration = refreshSessionConfiguration;
     }
 
-    public async Task<Result<None>> CreateOrUpdateSessionAsync(long userId, string fingerprint,
-        string refreshToken)
+    public async Task<Result<None>> CreateOrUpdateSessionAsync(long userId, string fingerprint, string refreshToken)
     {
         var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
-        
+
         var entity = new RefreshSession
         {
             Id = Guid.NewGuid(),
@@ -48,6 +46,9 @@ public class RefreshSessionService : IRefreshSessionService
 
     public async Task<Result<None>> DeleteSessionAsync(long userId, string fingerprint)
     {
-        throw new NotImplementedException();
+        var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
+        await _redis.RemoveAsync(redisKey);
+
+        return Result<None>.Success(new None());
     }
 }

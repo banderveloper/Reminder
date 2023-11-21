@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Reminder.Application.Interfaces;
 using Reminder.Application.Interfaces.Services;
+using Reminder.Application.Providers;
 using Reminder.Domain.Entities.Database;
 
 namespace Reminder.Application.Services;
@@ -9,10 +10,14 @@ namespace Reminder.Application.Services;
 public class UserService : IUserService
 {
     private readonly IApplicationDbContext _context;
+    private readonly EncryptionProvider _encryptionProvider;
 
-    public UserService(IApplicationDbContext context) =>
+    public UserService(IApplicationDbContext context, EncryptionProvider encryptionProvider)
+    {
         _context = context;
-    
+        _encryptionProvider = encryptionProvider;
+    }
+
     public async Task<Result<User>> CreateUserAsync(string username, string password, string? name)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Username.Equals(username));
@@ -24,7 +29,7 @@ public class UserService : IUserService
         {
             Username = username,
             Name = name,
-            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password, HashType.SHA256)
+            PasswordHash = _encryptionProvider.ToSha256(password)
         };
 
         _context.Users.Add(newUser);
@@ -44,11 +49,11 @@ public class UserService : IUserService
 
     public async Task<Result<User>> GetUserByCredentialsAsync(string username, string password)
     {
-        var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(password, HashType.SHA256);
+        var hashedPassword = _encryptionProvider.ToSha256(password);
 
         var user = await _context.Users.FirstOrDefaultAsync(user =>
             user.Username.Equals(username));
-
+        
         return user is not null && user.PasswordHash.Equals(hashedPassword)
             ? Result<User>.Success(user)
             : Result<User>.Error(ErrorCode.UserNotFound);
