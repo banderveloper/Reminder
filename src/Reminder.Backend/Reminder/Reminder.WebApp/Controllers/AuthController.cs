@@ -82,7 +82,11 @@ public class AuthController : BaseController
         var userId = _jwtProvider.GetUserIdFromRefreshToken(refreshToken);
         
         await _refreshSessionService.DeleteSessionAsync(userId, fingerprint);
+        
+        _cookieProvider.DeleteCookiesFromResponse(HttpContext.Response);
 
         return Result<None>.Success();
     }
+    
+    
 }

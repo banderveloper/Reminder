@@ -68,4 +68,11 @@ public class CookieProvider
         request.Cookies.TryGetValue(_cookieConfiguration.FingerprintCookieName, out var fingerprint);
         return fingerprint;
     }
+
+    public void DeleteCookiesFromResponse(HttpResponse response)
+    {
+        response.Cookies.Delete(_cookieConfiguration.FingerprintCookieName);
+        response.Cookies.Delete(_cookieConfiguration.RefreshTokenCookieName);
+        response.Cookies.Delete(_cookieConfiguration.AccessTokenCookieName);
+    }
 }
