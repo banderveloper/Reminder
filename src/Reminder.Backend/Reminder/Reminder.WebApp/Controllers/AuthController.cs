@@ -43,4 +43,24 @@ public class AuthController : BaseController
 
         return Result<None>.Success(new None());
     }
+
+    [HttpPost("sign-up")]
+    public async Task<Result<None>> SignUp([FromBody] SignUpRequestModel model)
+    {
+        var createUserResult = await _userService.CreateUserAsync(model.Username, model.Password, model.Name);
+
+        if (!createUserResult.Succeed)
+            return Result<None>.Error(createUserResult.ErrorCode);
+
+        var user = createUserResult.Data;
+
+        var accessToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Access);
+        var refreshToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Refresh);
+
+        await _refreshSessionService.CreateOrUpdateSessionAsync(user.Id, model.Fingerprint, refreshToken);
+        
+        _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
+
+        return Result<None>.Success(new None());
+    }
 }
