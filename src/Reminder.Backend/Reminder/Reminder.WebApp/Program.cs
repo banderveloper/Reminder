@@ -1,4 +1,5 @@
 using Reminder.Application;
+using Reminder.Application.Configurations;
 using Reminder.Persistence;
 using Reminder.WebApp;
 
@@ -19,16 +20,23 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddControllers();
+
 var scope = builder.Services.BuildServiceProvider().CreateScope();
 var applicationDbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
 DatabaseInitializer.Initialize(applicationDbContext);
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>().ConnectionString;
+});
 
 var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-app.MapGet("/", () => "Hello world");
+app.MapGet("/", () => DateTime.Now);
+app.MapControllers();
 
 Console.WriteLine("Server started!");
 app.Run();

@@ -18,9 +18,9 @@ public class CookieProvider
         _jwtConfiguration = jwtConfiguration;
     }
     
-    public void AddAuthenticateCookiesToResponse(HttpResponse response, AccessRefreshTokensDTO tokens)
+    public void AddAuthenticateCookiesToResponse(HttpResponse response, string accessToken, string refreshToken)
     {
-        response.Cookies.Append(_cookieConfiguration.RefreshTokenCookieName, tokens.RefreshToken,
+        response.Cookies.Append(_cookieConfiguration.RefreshTokenCookieName, refreshToken,
             new CookieOptions
             {
                 Secure = true,
@@ -29,7 +29,7 @@ public class CookieProvider
                 Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(_refreshSessionConfiguration.ExpirationMinutes))
             });
 
-        response.Cookies.Append(_cookieConfiguration.AccessTokenCookieName, tokens.AccessToken,
+        response.Cookies.Append(_cookieConfiguration.AccessTokenCookieName, accessToken,
             new CookieOptions
             {
                 Secure = true,
@@ -38,7 +38,7 @@ public class CookieProvider
                 Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(_jwtConfiguration.AccessExpirationMinutes))
             });
     }
-    
+
     public AccessRefreshTokensDTO GetAuthenticateTokensFromCookies(HttpRequest request)
     {
         request.Cookies.TryGetValue(_cookieConfiguration.AccessTokenCookieName, out var accessToken);

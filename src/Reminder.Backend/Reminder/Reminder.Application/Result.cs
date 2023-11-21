@@ -7,7 +7,7 @@ public class Result<TData>
     public bool Succeed => ErrorCode is null;
 
     public static Result<TData> Success(TData data) => new() { Data = data };
-    public static Result<TData> Error(ErrorCode errorCode) => new() { ErrorCode = errorCode };
+    public static Result<TData> Error(ErrorCode? errorCode) => new() { ErrorCode = errorCode };
 }
 
 public record struct None;

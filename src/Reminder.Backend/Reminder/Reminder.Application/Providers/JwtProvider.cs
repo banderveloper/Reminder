@@ -19,7 +19,7 @@ public class JwtProvider
         _refreshSessionConfiguration = refreshSessionConfiguration;
     }
 
-    public string GenerateUserJwt(int userId, JwtType jwtType)
+    public string GenerateUserJwt(long userId, JwtType jwtType)
     {
         var claims = new List<Claim>
         {
