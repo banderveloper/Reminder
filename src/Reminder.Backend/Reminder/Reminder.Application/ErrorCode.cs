@@ -9,4 +9,6 @@ public enum ErrorCode
     
     FingerprintCookieNotFound,
     RefreshCookieNotFound,
+    
+    BadRefreshToken,
 }
