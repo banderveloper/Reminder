@@ -5,5 +5,8 @@ public enum ErrorCode
     Unknown,
     
     UsernameAlreadyExists,
-    UserNotFound
+    UserNotFound,
+    
+    FingerprintCookieNotFound,
+    RefreshCookieNotFound,
 }

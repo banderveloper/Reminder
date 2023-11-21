@@ -12,11 +12,22 @@ public class JwtProvider
 {
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly RefreshSessionConfiguration _refreshSessionConfiguration;
+    public TokenValidationParameters ValidationParameters { get; }
 
     public JwtProvider(JwtConfiguration jwtConfiguration, RefreshSessionConfiguration refreshSessionConfiguration)
     {
         _jwtConfiguration = jwtConfiguration;
         _refreshSessionConfiguration = refreshSessionConfiguration;
+
+        ValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = _jwtConfiguration.Issuer,
+            ValidateAudience = true,
+            ValidAudience = _jwtConfiguration.Audience,
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.SecretKey)),
+        };
     }
 
     public string GenerateUserJwt(long userId, JwtType jwtType)
@@ -47,5 +58,36 @@ public class JwtProvider
             signingCredentials: credentials
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public bool IsRefreshTokenValid(string refreshToken)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        ClaimsPrincipal? principal;
+        
+        try
+        {
+            principal = tokenHandler.ValidateToken(refreshToken, ValidationParameters, out _);
+        }
+        catch (SecurityTokenException)
+        {
+            return false;
+        }
+
+        var tokenTypeClaim = principal.Claims.FirstOrDefault(claim => claim.Type.Equals(JwtRegisteredClaimNames.Typ));
+        var tokenTypeValue = tokenTypeClaim?.Value;
+
+        return tokenTypeValue != null && tokenTypeValue.Equals(JwtType.Refresh.ToString().ToLower());
+    }
+
+    public long GetUserIdFromRefreshToken(string refreshToken)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var claims = tokenHandler.ReadJwtToken(refreshToken).Claims;
+
+        var userIdString = claims.FirstOrDefault(claim => claim.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+
+        return long.Parse(userIdString);
     }
 }

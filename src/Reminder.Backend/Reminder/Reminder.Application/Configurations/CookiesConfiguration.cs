@@ -6,4 +6,5 @@ public class CookiesConfiguration
     
     public string AccessTokenCookieName { get; set; }
     public string RefreshTokenCookieName { get; set; }
+    public string FingerprintCookieName { get; set; }
 }

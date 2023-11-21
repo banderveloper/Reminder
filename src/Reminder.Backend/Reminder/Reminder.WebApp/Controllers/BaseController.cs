@@ -7,7 +7,5 @@ namespace Reminder.WebApp.Controllers;
 [Route("[controller]/[action]")]
 public class BaseController : ControllerBase
 {
-    internal int? UserId => User.Identity.IsAuthenticated
-        ? int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value)
-        : null;
+    internal long UserId => long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 }

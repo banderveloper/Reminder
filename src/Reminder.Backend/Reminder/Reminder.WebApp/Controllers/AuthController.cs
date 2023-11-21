@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Reminder.Application;
 using Reminder.Application.Interfaces.Services;
 using Reminder.Application.Providers;
@@ -41,7 +40,7 @@ public class AuthController : BaseController
         
         _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
 
-        return Result<None>.Success(new None());
+        return Result<None>.Success();
     }
 
     [HttpPost("sign-up")]
@@ -61,6 +60,14 @@ public class AuthController : BaseController
         
         _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
 
-        return Result<None>.Success(new None());
+        return Result<None>.Success();
+    }
+
+    [HttpPost("logout")]
+    public async Task<Result<None>> Logout([FromBody] LogoutRequestModel model)
+    {
+        await _refreshSessionService.DeleteSessionAsync(UserId, model.Fingerprint);
+
+        return Result<None>.Success();
     }
 }

@@ -39,6 +39,18 @@ public class CookieProvider
             });
     }
 
+    public void AddFingerprintCookieToResponse(HttpResponse response, string fingerprint)
+    {
+        response.Cookies.Append(_cookieConfiguration.FingerprintCookieName, fingerprint,
+            new CookieOptions
+            {
+                Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = new DateTimeOffset(DateTime.UtcNow.AddMinutes(_refreshSessionConfiguration.ExpirationMinutes))
+            });
+    }
+
     public AccessRefreshTokensDTO GetAuthenticateTokensFromCookies(HttpRequest request)
     {
         request.Cookies.TryGetValue(_cookieConfiguration.AccessTokenCookieName, out var accessToken);
@@ -49,5 +61,11 @@ public class CookieProvider
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
+    }
+
+    public string? GetFingerprintFromCookies(HttpRequest request)
+    {
+        request.Cookies.TryGetValue(_cookieConfiguration.FingerprintCookieName, out var fingerprint);
+        return fingerprint;
     }
 }

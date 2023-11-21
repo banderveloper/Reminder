@@ -41,7 +41,7 @@ public class RefreshSessionService : IRefreshSessionService
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_refreshSessionConfiguration.ExpirationMinutes)
             });
 
-        return Result<None>.Success(new None());
+        return Result<None>.Success();
     }
 
     public async Task<Result<None>> DeleteSessionAsync(long userId, string fingerprint)
@@ -49,6 +49,6 @@ public class RefreshSessionService : IRefreshSessionService
         var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
         await _redis.RemoveAsync(redisKey);
 
-        return Result<None>.Success(new None());
+        return Result<None>.Success();
     }
 }
