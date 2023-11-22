@@ -11,11 +11,11 @@ public interface IJwtProvider
     TokenValidationParameters ValidationParameters { get; }
 
     /// <summary>
-    /// Extract userId from refresh token
+    /// Extract userId from jwt token
     /// </summary>
-    /// <param name="refreshToken">JWT refresh token</param>
-    /// <returns>User id from refresh token</returns>
-    long GetUserIdFromRefreshToken(string refreshToken);
+    /// <param name="jwtToken">JWT token</param>
+    /// <returns>User id from token</returns>
+    long GetUserIdFromToken(string jwtToken);
     
     /// <summary>
     /// Generate user JWT, based on token validation parameters

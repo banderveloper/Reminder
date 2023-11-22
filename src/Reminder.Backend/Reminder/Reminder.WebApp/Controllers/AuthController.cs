@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Reminder.Application;
 using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
-using Reminder.Application.Providers;
 using Reminder.Domain.Enums;
 using Reminder.WebApp.Models.Auth;
 
@@ -92,7 +91,7 @@ public class AuthController : BaseController
         if (!_jwtProvider.IsRefreshTokenValid(refreshToken))
             return Result<None>.Error(ErrorCode.BadRefreshToken);
 
-        var userId = _jwtProvider.GetUserIdFromRefreshToken(refreshToken);
+        var userId = _jwtProvider.GetUserIdFromToken(refreshToken);
 
         var sessionExistsResult = await _refreshSessionService.SessionKeyExistsAsync(userId, fingerprint);
         var sessionExists = sessionExistsResult.Data;
@@ -128,7 +127,7 @@ public class AuthController : BaseController
         if (!_jwtProvider.IsRefreshTokenValid(refreshToken))
             return Result<None>.Error(ErrorCode.BadRefreshToken);
 
-        var userId = _jwtProvider.GetUserIdFromRefreshToken(refreshToken);
+        var userId = _jwtProvider.GetUserIdFromToken(refreshToken);
         
         await _refreshSessionService.DeleteSessionAsync(userId, fingerprint);
         

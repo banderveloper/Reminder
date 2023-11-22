@@ -82,10 +82,10 @@ public class JwtProvider : IJwtProvider
         return tokenTypeValue != null && tokenTypeValue.Equals(JwtType.Refresh.ToString().ToLower());
     }
 
-    public long GetUserIdFromRefreshToken(string refreshToken)
+    public long GetUserIdFromToken(string jwtToken)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var claims = tokenHandler.ReadJwtToken(refreshToken).Claims;
+        var claims = tokenHandler.ReadJwtToken(jwtToken).Claims;
 
         var userIdString = claims.FirstOrDefault(claim => claim.Type.Equals(ClaimTypes.NameIdentifier)).Value;
 

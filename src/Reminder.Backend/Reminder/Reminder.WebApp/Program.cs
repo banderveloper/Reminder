@@ -1,6 +1,11 @@
+using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Reminder.Application;
 using Reminder.Application.Configurations;
 using Reminder.Application.Converters;
+using Reminder.Application.Interfaces.Providers;
 using Reminder.Persistence;
 using Reminder.WebApp;
 
@@ -12,13 +17,14 @@ builder.AddCustomConfiguration();
 // Injecting other layers
 builder.Services.AddApplication().AddPersistence(builder.Environment.EnvironmentName);
 
+var scope = builder.Services.BuildServiceProvider().CreateScope();
+
 // CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy
-            .WithOrigins("null", "http://localhost:5000", "http://localhost:3000")
+        policy.WithOrigins("null", "http://localhost:5000", "http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -31,8 +37,16 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
 });
 
+// Add bearer auth schema
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters =
+            scope.ServiceProvider.GetRequiredService<IJwtProvider>().ValidationParameters;
+    });
+
 // Initialize database if it is not exists
-var scope = builder.Services.BuildServiceProvider().CreateScope();
 var applicationDbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
 DatabaseInitializer.Initialize(applicationDbContext);
 
@@ -45,6 +59,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 var app = builder.Build();
 
 app.UseCors("AllowAll");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/", () => DateTime.Now);
 app.MapControllers();
