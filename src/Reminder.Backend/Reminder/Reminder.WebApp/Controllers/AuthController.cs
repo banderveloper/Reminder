@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Reminder.Application;
+using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
 using Reminder.Application.Providers;
 using Reminder.Domain.Enums;
@@ -8,14 +10,15 @@ using Reminder.WebApp.Models.Auth;
 namespace Reminder.WebApp.Controllers;
 
 [Route("auth")]
+[AllowAnonymous]
 public class AuthController : BaseController
 {
     private readonly IUserService _userService;
     private readonly IRefreshSessionService _refreshSessionService;
-    private readonly CookieProvider _cookieProvider;
-    private readonly JwtProvider _jwtProvider;
+    private readonly ICookieProvider _cookieProvider;
+    private readonly IJwtProvider _jwtProvider;
 
-    public AuthController(IUserService userService, CookieProvider cookieProvider, JwtProvider jwtProvider, IRefreshSessionService refreshSessionService)
+    public AuthController(IUserService userService, ICookieProvider cookieProvider, IJwtProvider jwtProvider, IRefreshSessionService refreshSessionService)
     {
         _userService = userService;
         _cookieProvider = cookieProvider;

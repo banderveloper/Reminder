@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Reminder.Application.Configurations;
 using Reminder.Application.DTOs;
+using Reminder.Application.Interfaces.Providers;
 
 namespace Reminder.Application.Providers;
 
-public class CookieProvider
+public class CookieProvider : ICookieProvider
 {
     private readonly CookiesConfiguration _cookieConfiguration;
     private readonly JwtConfiguration _jwtConfiguration;

@@ -3,12 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Reminder.Application.Configurations;
+using Reminder.Application.Interfaces.Providers;
 using Reminder.Domain.Enums;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace Reminder.Application.Providers;
 
-public class JwtProvider
+public class JwtProvider : IJwtProvider
 {
     private readonly JwtConfiguration _jwtConfiguration;
     private readonly RefreshSessionConfiguration _refreshSessionConfiguration;

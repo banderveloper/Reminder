@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
 using Reminder.Application.Providers;
 using Reminder.Application.Services;
@@ -12,9 +13,9 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRefreshSessionService, RefreshSessionService>();
 
-        services.AddSingleton<JwtProvider>();
-        services.AddSingleton<CookieProvider>();
-        services.AddSingleton<EncryptionProvider>();
+        services.AddSingleton<IJwtProvider, JwtProvider>();
+        services.AddSingleton<ICookieProvider, CookieProvider>();
+        services.AddSingleton<IEncryptionProvider, Sha256Provider>();
         
         return services;
     }

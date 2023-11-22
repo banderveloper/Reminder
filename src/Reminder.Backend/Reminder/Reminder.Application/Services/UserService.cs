@@ -1,18 +1,17 @@
-﻿using BCrypt.Net;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Reminder.Application.Interfaces;
+using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
-using Reminder.Application.Providers;
 using Reminder.Domain.Entities.Database;
-
+ 
 namespace Reminder.Application.Services;
 
 public class UserService : IUserService
 {
     private readonly IApplicationDbContext _context;
-    private readonly EncryptionProvider _encryptionProvider;
+    private readonly IEncryptionProvider _encryptionProvider;
 
-    public UserService(IApplicationDbContext context, EncryptionProvider encryptionProvider)
+    public UserService(IApplicationDbContext context, IEncryptionProvider encryptionProvider)
     {
         _context = context;
         _encryptionProvider = encryptionProvider;
@@ -29,7 +28,7 @@ public class UserService : IUserService
         {
             Username = username,
             Name = name,
-            PasswordHash = _encryptionProvider.ToSha256(password)
+            PasswordHash = _encryptionProvider.Hash(password)
         };
 
         _context.Users.Add(newUser);
@@ -49,7 +48,7 @@ public class UserService : IUserService
 
     public async Task<Result<User>> GetUserByCredentialsAsync(string username, string password)
     {
-        var hashedPassword = _encryptionProvider.ToSha256(password);
+        var hashedPassword = _encryptionProvider.Hash(password);
 
         var user = await _context.Users.FirstOrDefaultAsync(user =>
             user.Username.Equals(username));
