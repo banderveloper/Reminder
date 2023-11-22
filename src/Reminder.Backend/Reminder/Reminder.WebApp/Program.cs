@@ -1,13 +1,11 @@
-using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Reminder.Application;
 using Reminder.Application.Configurations;
 using Reminder.Application.Converters;
 using Reminder.Application.Interfaces.Providers;
 using Reminder.Persistence;
 using Reminder.WebApp;
+using Reminder.WebApp.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +54,8 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = scope.ServiceProvider.GetRequiredService<RedisConfiguration>().ConnectionString;
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
@@ -64,6 +64,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", () => DateTime.Now);
+app.MapHub<PromptsHub>("/hub/prompts");
 app.MapControllers();
 
 Console.WriteLine("Server started!");
