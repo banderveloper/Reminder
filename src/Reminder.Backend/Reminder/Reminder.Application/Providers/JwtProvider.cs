@@ -70,7 +70,7 @@ public class JwtProvider
         {
             principal = tokenHandler.ValidateToken(refreshToken, ValidationParameters, out _);
         }
-        catch (SecurityTokenException)
+        catch (Exception)
         {
             return false;
         }

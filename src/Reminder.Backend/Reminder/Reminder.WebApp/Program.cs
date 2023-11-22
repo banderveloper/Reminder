@@ -1,5 +1,6 @@
 using Reminder.Application;
 using Reminder.Application.Configurations;
+using Reminder.Application.Converters;
 using Reminder.Persistence;
 using Reminder.WebApp;
 
@@ -20,7 +21,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
+    });
 
 var scope = builder.Services.BuildServiceProvider().CreateScope();
 var applicationDbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();

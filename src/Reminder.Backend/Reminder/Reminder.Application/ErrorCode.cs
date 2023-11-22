@@ -1,5 +1,9 @@
-﻿namespace Reminder.Application;
+﻿using System.Text.Json.Serialization;
+using Reminder.Application.Converters;
 
+namespace Reminder.Application;
+
+[JsonConverter(typeof(SnakeCaseStringEnumConverter<ErrorCode>))]
 public enum ErrorCode
 {
     Unknown,
