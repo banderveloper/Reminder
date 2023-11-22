@@ -5,6 +5,7 @@ namespace Reminder.WebApp;
 
 public static class DependencyInjection
 {
+    // Inject custom configuration classes, dependent from appsettings
     public static void AddCustomConfiguration(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection(DatabaseConfiguration.ConfigurationKey));

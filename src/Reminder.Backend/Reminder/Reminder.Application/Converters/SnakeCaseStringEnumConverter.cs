@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Reminder.Application.Converters;
 
+// Enum value converter to snake_case_string
+// Used for converting int value in response to snake_case_string (example: errorCode not 0, but username_not_found)
+// Injecting in Program.cs in AddController().AddJsonOptions...
 public class SnakeCaseStringEnumConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {

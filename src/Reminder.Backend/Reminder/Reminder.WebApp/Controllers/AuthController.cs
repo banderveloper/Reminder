@@ -29,6 +29,9 @@ public class AuthController : BaseController
     [HttpPost("sign-in")]
     public async Task<Result<None>> SignIn([FromBody] SignInRequestModel model)
     {
+        // ALGORITHM:
+        // Get user by credentials, check existing, generate tokens, create/update session, add tokens and fingerprint to response cookies
+        
         var getUserResult = await _userService.GetUserByCredentialsAsync(model.Username, model.Password);
         
         if (!getUserResult.Succeed)
@@ -50,6 +53,9 @@ public class AuthController : BaseController
     [HttpPost("sign-up")]
     public async Task<Result<None>> SignUp([FromBody] SignUpRequestModel model)
     {
+        // ALGORITHM:
+        // Try to create user, check success, generate tokens, start session, add tokens and fingerprint to response cookies
+        
         var createUserResult = await _userService.CreateUserAsync(model.Username, model.Password, model.Name);
 
         if (!createUserResult.Succeed)
@@ -71,6 +77,10 @@ public class AuthController : BaseController
     [HttpPost("refresh")]
     public async Task<Result<None>> Refresh()
     {
+        // ALGORITHM:
+        // Get refresh token and fingerprint from request cookies, check existing and validity, extract user id from refresh token...
+        // ...check session existing, generate tokens, start session, add auth tokens to response cookies 
+        
         var refreshToken = _cookieProvider.GetAuthenticateTokensFromCookies(HttpContext.Request).RefreshToken;
         var fingerprint = _cookieProvider.GetFingerprintFromCookies(HttpContext.Request);
 
@@ -103,6 +113,10 @@ public class AuthController : BaseController
     [HttpPost("sign-out")]
     public async Task<Result<None>> Logout()
     {
+        // ALGORITHM:
+        // Get refresh token and fingerprint from request cookies, check their existing and token validity...
+        // extract user id from refresh token, delete session, delete cookies
+        
         var refreshToken = _cookieProvider.GetAuthenticateTokensFromCookies(HttpContext.Request).RefreshToken;
         var fingerprint = _cookieProvider.GetFingerprintFromCookies(HttpContext.Request);
 

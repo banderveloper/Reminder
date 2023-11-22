@@ -5,6 +5,7 @@ using Reminder.Persistence.EntityTypeConfigurations;
 
 namespace Reminder.Persistence;
 
+// Core entity framework database context
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public DbSet<User> Users { get; set; }

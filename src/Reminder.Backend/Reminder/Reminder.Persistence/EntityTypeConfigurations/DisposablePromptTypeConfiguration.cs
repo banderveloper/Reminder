@@ -4,6 +4,7 @@ using Reminder.Domain.Entities.Database;
 
 namespace Reminder.Persistence.EntityTypeConfigurations;
 
+// EntityFramework DisposablePrompt entity configuration
 public class DisposablePromptTypeConfiguration : IEntityTypeConfiguration<DisposablePrompt>
 {
     public void Configure(EntityTypeBuilder<DisposablePrompt> builder)

@@ -3,11 +3,12 @@ using Reminder.Domain.Entities.Database;
 
 namespace Reminder.Application.Interfaces;
 
+// Parent of applicationDbContext
 public interface IApplicationDbContext
 {
     DbSet<User> Users { get; set; }
     DbSet<DisposablePrompt> DisposablePrompts { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     
+    // Method from DbContext
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

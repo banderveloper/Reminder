@@ -4,6 +4,7 @@ using Reminder.Domain.Entities.Database;
 
 namespace Reminder.Persistence.EntityTypeConfigurations;
 
+// EntityFramework User entity configuration
 public class UserTypeConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)

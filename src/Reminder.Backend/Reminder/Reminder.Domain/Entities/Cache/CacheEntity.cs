@@ -2,6 +2,7 @@
 
 namespace Reminder.Domain.Entities.Cache;
 
+// Parent of each cache-stored entities
 public abstract class CacheEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();

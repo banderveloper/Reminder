@@ -6,5 +6,6 @@ public class User : DatabaseEntity
     public string PasswordHash { get; set; }
     public string? Name { get; set; }
     
+    // FK to owned prompts
     public IList<DisposablePrompt> DisposablePrompts { get; set; }
 }

@@ -2,6 +2,7 @@
 
 namespace Reminder.Domain.Entities.Database;
 
+// Parent of each database-stored entity
 public abstract class DatabaseEntity
 {
     [Key]
