@@ -15,4 +15,6 @@ public enum ErrorCode
     RefreshCookieNotFound,
     
     BadRefreshToken,
+    
+    SessionNotFound
 }

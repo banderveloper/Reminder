@@ -65,7 +65,39 @@ public class AuthController : BaseController
         return Result<None>.Success();
     }
 
-    [HttpPost("logout")]
+    [HttpPost("refresh")]
+    public async Task<Result<None>> Refresh()
+    {
+        var refreshToken = _cookieProvider.GetAuthenticateTokensFromCookies(HttpContext.Request).RefreshToken;
+        var fingerprint = _cookieProvider.GetFingerprintFromCookies(HttpContext.Request);
+
+        if (refreshToken is null)
+            return Result<None>.Error(ErrorCode.RefreshCookieNotFound);
+        if (fingerprint is null)
+            return Result<None>.Error(ErrorCode.FingerprintCookieNotFound);
+
+        if (!_jwtProvider.IsRefreshTokenValid(refreshToken))
+            return Result<None>.Error(ErrorCode.BadRefreshToken);
+
+        var userId = _jwtProvider.GetUserIdFromRefreshToken(refreshToken);
+
+        var sessionExistsResult = await _refreshSessionService.SessionKeyExistsAsync(userId, fingerprint);
+        var sessionExists = sessionExistsResult.Data;
+
+        if (!sessionExists)
+            return Result<None>.Error(ErrorCode.SessionNotFound);
+        
+        var accessToken = _jwtProvider.GenerateUserJwt(userId, JwtType.Access);
+        refreshToken = _jwtProvider.GenerateUserJwt(userId, JwtType.Refresh);
+
+        await _refreshSessionService.CreateOrUpdateSessionAsync(userId, fingerprint, refreshToken);
+        
+        _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
+        
+        return Result<None>.Success();
+    }
+
+    [HttpPost("sign-out")]
     public async Task<Result<None>> Logout()
     {
         var refreshToken = _cookieProvider.GetAuthenticateTokensFromCookies(HttpContext.Request).RefreshToken;
@@ -87,6 +119,4 @@ public class AuthController : BaseController
 
         return Result<None>.Success();
     }
-    
-    
 }

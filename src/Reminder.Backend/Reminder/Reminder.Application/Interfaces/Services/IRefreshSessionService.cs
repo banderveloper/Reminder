@@ -6,4 +6,5 @@ public interface IRefreshSessionService
 {
     Task<Result<None>> CreateOrUpdateSessionAsync(long userId, string fingerprint, string refreshToken);
     Task<Result<None>> DeleteSessionAsync(long userId, string fingerprint);
+    Task<Result<bool>> SessionKeyExistsAsync(long userId, string fingerprint);
 }

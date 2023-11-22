@@ -21,11 +21,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
-    });
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new SnakeCaseStringEnumConverter<ErrorCode>());
+});
 
 var scope = builder.Services.BuildServiceProvider().CreateScope();
 var applicationDbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();

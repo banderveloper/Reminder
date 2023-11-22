@@ -51,4 +51,13 @@ public class RefreshSessionService : IRefreshSessionService
 
         return Result<None>.Success();
     }
+
+    public async Task<Result<bool>> SessionKeyExistsAsync(long userId, string fingerprint)
+    {
+        var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
+
+        var data = await _redis.GetAsync(redisKey);
+
+        return Result<bool>.Success(data is not null);
+    }
 }
