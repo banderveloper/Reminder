@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.SignalR;
 using Reminder.Application;
 using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
+using Reminder.Domain.Entities.Database;
+using Reminder.WebApp.Models.DisposablePrompts;
 
 namespace Reminder.WebApp.Hubs;
 
@@ -40,6 +42,23 @@ public class PromptsHub : Hub
 
         // _userConnections[UserId].Remove(Context.ConnectionId);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(UserId));
+    }
+
+    public async Task CreateDisposablePromptAsync(CreateDisposablePromptRequestModel model)
+    {
+        Console.WriteLine("Creation invoked from user with id " + UserId);
+        
+        var createDisposablePromptResult =
+            await _disposablePromptService.Create(UserId, model.Title, model.Description, model.ShowsAt);
+
+        if (!createDisposablePromptResult.Succeed)
+        {
+            await Clients.Caller.SendAsync("GetCreateDisposablePromptError", createDisposablePromptResult);
+            return;
+        }
+
+        await Clients.Group(GetGroupName(UserId))
+            .SendAsync("GetCreateDisposablePromptSuccess", createDisposablePromptResult);
     }
 
     private static string GetGroupName(long userId) => "user-" + userId;
