@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
 using Reminder.WebApp.Models.DisposablePrompts;
 
@@ -20,6 +19,8 @@ public class PromptsHub : Hub
     
     public override async Task OnConnectedAsync()
     {
+        Console.WriteLine("Connected " + Context.ConnectionId);
+        
         await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(UserId));
 
         var disposablePromptsResult = await _disposablePromptService.GetAllByUserId(UserId);
@@ -29,6 +30,8 @@ public class PromptsHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        Console.WriteLine("Disconnected " + Context.ConnectionId);
+        
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(UserId));
     }
 
