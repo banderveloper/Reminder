@@ -31,7 +31,7 @@ public class AuthController : BaseController
         // ALGORITHM:
         // Get user by credentials, check existing, generate tokens, create/update session, add tokens and fingerprint to response cookies
         
-        var getUserResult = await _userService.GetUserByCredentialsAsync(model.Username, model.Password);
+        var getUserResult = await _userService.GetByCredentialsAsync(model.Username, model.Password);
         
         if (!getUserResult.Succeed)
             return Result<None>.Error(getUserResult.ErrorCode);
@@ -41,7 +41,7 @@ public class AuthController : BaseController
         var accessToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Access);
         var refreshToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Refresh);
 
-        await _refreshSessionService.CreateOrUpdateSessionAsync(user.Id, model.Fingerprint, refreshToken);
+        await _refreshSessionService.CreateOrUpdateAsync(user.Id, model.Fingerprint, refreshToken);
         
         _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
         _cookieProvider.AddFingerprintCookieToResponse(HttpContext.Response, model.Fingerprint);
@@ -55,7 +55,7 @@ public class AuthController : BaseController
         // ALGORITHM:
         // Try to create user, check success, generate tokens, start session, add tokens and fingerprint to response cookies
         
-        var createUserResult = await _userService.CreateUserAsync(model.Username, model.Password, model.Name);
+        var createUserResult = await _userService.CreateAsync(model.Username, model.Password, model.Name);
 
         if (!createUserResult.Succeed)
             return Result<None>.Error(createUserResult.ErrorCode);
@@ -65,7 +65,7 @@ public class AuthController : BaseController
         var accessToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Access);
         var refreshToken = _jwtProvider.GenerateUserJwt(user.Id, JwtType.Refresh);
 
-        await _refreshSessionService.CreateOrUpdateSessionAsync(user.Id, model.Fingerprint, refreshToken);
+        await _refreshSessionService.CreateOrUpdateAsync(user.Id, model.Fingerprint, refreshToken);
         
         _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
         _cookieProvider.AddFingerprintCookieToResponse(HttpContext.Response, model.Fingerprint);
@@ -102,7 +102,7 @@ public class AuthController : BaseController
         var accessToken = _jwtProvider.GenerateUserJwt(userId, JwtType.Access);
         refreshToken = _jwtProvider.GenerateUserJwt(userId, JwtType.Refresh);
 
-        await _refreshSessionService.CreateOrUpdateSessionAsync(userId, fingerprint, refreshToken);
+        await _refreshSessionService.CreateOrUpdateAsync(userId, fingerprint, refreshToken);
         
         _cookieProvider.AddAuthenticateCookiesToResponse(HttpContext.Response, accessToken, refreshToken);
         
@@ -129,7 +129,7 @@ public class AuthController : BaseController
 
         var userId = _jwtProvider.GetUserIdFromToken(refreshToken);
         
-        await _refreshSessionService.DeleteSessionAsync(userId, fingerprint);
+        await _refreshSessionService.DeleteAsync(userId, fingerprint);
         
         _cookieProvider.DeleteCookiesFromResponse(HttpContext.Response);
 

@@ -18,7 +18,7 @@ public class RefreshSessionService : IRefreshSessionService
         _refreshSessionConfiguration = refreshSessionConfiguration;
     }
 
-    public async Task<Result<None>> CreateOrUpdateSessionAsync(long userId, string fingerprint, string refreshToken)
+    public async Task<Result<None>> CreateOrUpdateAsync(long userId, string fingerprint, string refreshToken)
     {
         var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
 
@@ -44,7 +44,7 @@ public class RefreshSessionService : IRefreshSessionService
         return Result<None>.Success();
     }
 
-    public async Task<Result<None>> DeleteSessionAsync(long userId, string fingerprint)
+    public async Task<Result<None>> DeleteAsync(long userId, string fingerprint)
     {
         var redisKey = RefreshSession.GetCacheKey(userId, fingerprint);
         await _redis.RemoveAsync(redisKey);

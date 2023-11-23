@@ -10,7 +10,7 @@ public interface IRefreshSessionService
     /// <param name="fingerprint">Unique client code</param>
     /// <param name="refreshToken">JWT refresh token</param>
     /// <returns></returns>
-    Task<Result<None>> CreateOrUpdateSessionAsync(long userId, string fingerprint, string refreshToken);
+    Task<Result<None>> CreateOrUpdateAsync(long userId, string fingerprint, string refreshToken);
     
     /// <summary>
     /// End user session
@@ -18,7 +18,7 @@ public interface IRefreshSessionService
     /// <param name="userId">User id</param>
     /// <param name="fingerprint">Unique client code</param>
     /// <returns></returns>
-    Task<Result<None>> DeleteSessionAsync(long userId, string fingerprint);
+    Task<Result<None>> DeleteAsync(long userId, string fingerprint);
     
     /// <summary>
     /// Check session existance

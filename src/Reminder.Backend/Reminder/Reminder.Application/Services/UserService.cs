@@ -17,7 +17,7 @@ public class UserService : IUserService
         _encryptionProvider = encryptionProvider;
     }
 
-    public async Task<Result<User>> CreateUserAsync(string username, string password, string? name)
+    public async Task<Result<User>> CreateAsync(string username, string password, string? name)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Username.Equals(username));
 
@@ -37,7 +37,7 @@ public class UserService : IUserService
         return Result<User>.Success(newUser);
     }
 
-    public async Task<Result<User>> GetUserByIdAsync(long id)
+    public async Task<Result<User>> GetByIdAsync(long id)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
 
@@ -46,7 +46,7 @@ public class UserService : IUserService
             : Result<User>.Error(ErrorCode.UserNotFound);
     }
 
-    public async Task<Result<User>> GetUserByCredentialsAsync(string username, string password)
+    public async Task<Result<User>> GetByCredentialsAsync(string username, string password)
     {
         var hashedPassword = _encryptionProvider.Hash(password);
 

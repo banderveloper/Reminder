@@ -12,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRefreshSessionService, RefreshSessionService>();
+        services.AddScoped<IDisposablePromptService, DisposablePromptService>();
 
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddSingleton<ICookieProvider, CookieProvider>();
