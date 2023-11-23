@@ -17,5 +17,8 @@ public enum ErrorCode
     
     BadRefreshToken,
     
-    SessionNotFound
+    SessionNotFound,
+    
+    DisposablePromptNotFound,
+    DisposablePromptBadShowTime
 }

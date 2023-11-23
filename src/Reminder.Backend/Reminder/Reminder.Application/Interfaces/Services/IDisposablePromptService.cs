@@ -16,7 +16,7 @@ public interface IDisposablePromptService
     /// </summary>
     /// <param name="userId">User-creator id</param>
     /// <returns>Result with collection of disposable prompts bound to user with given id</returns>
-    Task<Result<IQueryable<DisposablePrompt>>> GetAllByUserId(long userId);
+    Task<Result<IEnumerable<DisposablePrompt>>> GetAllByUserId(long userId);
     
     /// <summary>
     /// Create new disposable prompt
