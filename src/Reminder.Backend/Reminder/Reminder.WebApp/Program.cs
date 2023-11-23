@@ -6,6 +6,7 @@ using Reminder.Application.Interfaces.Providers;
 using Reminder.Persistence;
 using Reminder.WebApp;
 using Reminder.WebApp.Hubs;
+using Reminder.WebApp.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,8 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
+app.UseAccessTokenTransfer();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -69,3 +72,4 @@ app.MapControllers();
 
 Console.WriteLine("Server started!");
 app.Run();
+
