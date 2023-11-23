@@ -1,10 +1,8 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Reminder.Application;
 using Reminder.Application.Interfaces.Providers;
 using Reminder.Application.Interfaces.Services;
-using Reminder.Domain.Entities.Database;
 using Reminder.WebApp.Models.DisposablePrompts;
 
 namespace Reminder.WebApp.Hubs;
@@ -12,23 +10,16 @@ namespace Reminder.WebApp.Hubs;
 [Authorize]
 public class PromptsHub : Hub
 {
-    private readonly IJwtProvider _jwtProvider;
     private readonly IDisposablePromptService _disposablePromptService;
     private long UserId => long.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-    // private static Dictionary<long, ISet<string>> _userConnections = new(); 
-
-    public PromptsHub(IJwtProvider jwtProvider, IDisposablePromptService disposablePromptService)
+    
+    public PromptsHub(IDisposablePromptService disposablePromptService)
     {
-        _jwtProvider = jwtProvider;
         _disposablePromptService = disposablePromptService;
     }
     
     public override async Task OnConnectedAsync()
     {
-        Console.WriteLine("Connected user with " + UserId);
-
-        // _userConnections.AddOrUpdate(UserId, Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(UserId));
 
         var disposablePromptsResult = await _disposablePromptService.GetAllByUserId(UserId);
@@ -38,16 +29,11 @@ public class PromptsHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Console.WriteLine("Disconnected user with " + UserId);
-
-        // _userConnections[UserId].Remove(Context.ConnectionId);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(UserId));
     }
 
     public async Task CreateDisposablePromptAsync(CreateDisposablePromptRequestModel model)
     {
-        Console.WriteLine("Creation invoked from user with id " + UserId);
-        
         var createDisposablePromptResult =
             await _disposablePromptService.Create(UserId, model.Title, model.Description, model.ShowsAt);
 
