@@ -13,7 +13,7 @@ public class AccessTokenTransferMiddleware
         _next = next;
         _cookiesConfiguration = cookiesConfiguration;
     }
-
+    
     public async Task InvokeAsync(HttpContext context)
     {
         var accessToken = context.Request.Cookies[_cookiesConfiguration.AccessTokenCookieName];

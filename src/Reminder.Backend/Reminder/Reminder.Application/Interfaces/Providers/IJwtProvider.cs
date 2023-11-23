@@ -26,9 +26,10 @@ public interface IJwtProvider
     string GenerateUserJwt(long userId, JwtType jwtType);
     
     /// <summary>
-    /// Check is refresh token valid using token validation parameters
+    /// Check is jwt token valid using token validation parameters
     /// </summary>
-    /// <param name="refreshToken">JWT refresh token to validate</param>
-    /// <returns>JWT refresh token validity flag</returns>
-    bool IsRefreshTokenValid(string refreshToken);
+    /// <param name="token">JWT token to validate</param>
+    /// <param name="tokenType">Access/Refresh token</param>
+    /// <returns>JWT token validity flag</returns>
+    bool IsTokenValid(string token, JwtType tokenType);
 }

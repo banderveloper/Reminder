@@ -61,7 +61,7 @@ public class JwtProvider : IJwtProvider
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public bool IsRefreshTokenValid(string refreshToken)
+    public bool IsTokenValid(string token, JwtType tokenType)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -69,7 +69,7 @@ public class JwtProvider : IJwtProvider
         
         try
         {
-            principal = tokenHandler.ValidateToken(refreshToken, ValidationParameters, out _);
+            principal = tokenHandler.ValidateToken(token, ValidationParameters, out _);
         }
         catch (Exception)
         {
@@ -79,7 +79,7 @@ public class JwtProvider : IJwtProvider
         var tokenTypeClaim = principal.Claims.FirstOrDefault(claim => claim.Type.Equals(JwtRegisteredClaimNames.Typ));
         var tokenTypeValue = tokenTypeClaim?.Value;
 
-        return tokenTypeValue != null && tokenTypeValue.Equals(JwtType.Refresh.ToString().ToLower());
+        return tokenTypeValue != null && tokenTypeValue.Equals(tokenType.ToString().ToLower());
     }
 
     public long GetUserIdFromToken(string jwtToken)

@@ -5,7 +5,6 @@ using Reminder.Application.Interfaces.Providers;
 
 namespace Reminder.WebApp.Hubs;
 
-
 [Authorize]
 public class PromptsHub : Hub
 {
@@ -21,6 +20,12 @@ public class PromptsHub : Hub
     public override Task OnConnectedAsync()
     {
         Console.WriteLine("Connected user with " + UserId);
+        return Task.CompletedTask;
+    }
+
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        Console.WriteLine("Disconnected user with " + UserId);
         return Task.CompletedTask;
     }
 }

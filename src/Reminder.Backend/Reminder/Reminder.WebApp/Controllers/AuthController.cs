@@ -88,7 +88,7 @@ public class AuthController : BaseController
         if (fingerprint is null)
             return Result<None>.Error(ErrorCode.FingerprintCookieNotFound);
 
-        if (!_jwtProvider.IsRefreshTokenValid(refreshToken))
+        if (!_jwtProvider.IsTokenValid(refreshToken, JwtType.Refresh))
             return Result<None>.Error(ErrorCode.BadRefreshToken);
 
         var userId = _jwtProvider.GetUserIdFromToken(refreshToken);
@@ -124,7 +124,7 @@ public class AuthController : BaseController
         if (fingerprint is null)
             return Result<None>.Error(ErrorCode.FingerprintCookieNotFound);
 
-        if (!_jwtProvider.IsRefreshTokenValid(refreshToken))
+        if (!_jwtProvider.IsTokenValid(refreshToken, JwtType.Refresh))
             return Result<None>.Error(ErrorCode.BadRefreshToken);
 
         var userId = _jwtProvider.GetUserIdFromToken(refreshToken);
