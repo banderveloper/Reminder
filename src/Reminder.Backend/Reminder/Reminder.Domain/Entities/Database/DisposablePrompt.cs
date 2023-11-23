@@ -1,4 +1,6 @@
-﻿namespace Reminder.Domain.Entities.Database;
+﻿using System.Text.Json.Serialization;
+
+namespace Reminder.Domain.Entities.Database;
 
 // Reminding prompt, disappears after showing
 public class DisposablePrompt : DatabaseEntity
@@ -16,5 +18,6 @@ public class DisposablePrompt : DatabaseEntity
     public DateTime ShowsAt { get; set; } = DateTime.MaxValue;
     
     // Foreign key to user
+    [JsonIgnore]
     public User User { get; set; }
 }
