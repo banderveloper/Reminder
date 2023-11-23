@@ -11,21 +11,28 @@ public class PromptsHub : Hub
     private readonly IJwtProvider _jwtProvider;
     private long UserId => long.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
+    // private static Dictionary<long, ISet<string>> _userConnections = new(); 
+
     public PromptsHub(IJwtProvider jwtProvider)
     {
         _jwtProvider = jwtProvider;
-        Console.WriteLine("Add hub");
     }
     
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         Console.WriteLine("Connected user with " + UserId);
-        return Task.CompletedTask;
+
+        // _userConnections.AddOrUpdate(UserId, Context.ConnectionId);
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetGroupName(UserId));
     }
 
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         Console.WriteLine("Disconnected user with " + UserId);
-        return Task.CompletedTask;
+
+        // _userConnections[UserId].Remove(Context.ConnectionId);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetGroupName(UserId));
     }
+
+    private string GetGroupName(long userId) => "user-" + userId;
 }
