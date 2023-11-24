@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Reminder.Application;
 using Reminder.Application.Interfaces.Services;
 using Reminder.WebApp.Models.DisposablePrompts;
 
@@ -50,5 +51,34 @@ public class PromptsHub : Hub
             .SendAsync("GetCreateDisposablePromptSuccess", createDisposablePromptResult);
     }
 
+    public async Task DeleteDisposablePromptAsync(long disposablePromptId)
+    {
+        Console.WriteLine("Delete invoked");
+        
+        var getOwnerIdResult = await _disposablePromptService.GetUserIdByPrompt(disposablePromptId);
+
+        if (!getOwnerIdResult.Succeed)
+        {
+            await Clients.Group(GetGroupName(UserId)).SendAsync("GetDeleteDisposablePromptError", getOwnerIdResult);
+            return;
+        }
+
+        var ownerId = getOwnerIdResult.Data;
+        Console.WriteLine("Owner id: " + ownerId);
+        Console.WriteLine("User id: " + UserId);
+
+        if (ownerId != UserId)
+        {
+            var errorResult = Result<None>.Error(ErrorCode.DisposablePromptProtected);
+            await Clients.Group(GetGroupName(UserId)).SendAsync("GetDeleteDisposablePromptError", errorResult);
+            return;
+        }
+
+        await _disposablePromptService.DeleteById(disposablePromptId);
+
+        var successResult = Result<long>.Success(disposablePromptId);
+        await Clients.Group(GetGroupName(UserId)).SendAsync("GetDeleteDisposablePromptSuccess", successResult);
+    }
+    
     private static string GetGroupName(long userId) => "user-" + userId;
 }

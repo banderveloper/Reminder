@@ -18,7 +18,7 @@ public class DisposablePromptService : IDisposablePromptService
         var disposablePrompt = await _context.DisposablePrompts.FirstOrDefaultAsync(dp => dp.Id == disposablePromptId);
 
         return disposablePrompt is not null
-            ? Result<long>.Success(disposablePromptId)
+            ? Result<long>.Success(disposablePrompt.UserId)
             : Result<long>.Error(ErrorCode.DisposablePromptNotFound);
     }
 

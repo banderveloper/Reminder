@@ -20,5 +20,6 @@ public enum ErrorCode
     SessionNotFound,
     
     DisposablePromptNotFound,
-    DisposablePromptBadShowTime
+    DisposablePromptBadShowTime,
+    DisposablePromptProtected
 }
