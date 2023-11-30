@@ -19,6 +19,8 @@ public class JwtProvider : IJwtProvider
     {
         _jwtConfiguration = jwtConfiguration;
         _refreshSessionConfiguration = refreshSessionConfiguration;
+        
+        Console.WriteLine($"JWT SECRET KEY: {_jwtConfiguration.SecretKey}");
 
         ValidationParameters = new TokenValidationParameters
         {
@@ -29,6 +31,8 @@ public class JwtProvider : IJwtProvider
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.SecretKey)),
         };
+
+        
     }
 
     public string GenerateUserJwt(long userId, JwtType jwtType)

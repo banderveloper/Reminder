@@ -8,6 +8,9 @@ using Reminder.WebApp;
 using Reminder.WebApp.Hubs;
 using Reminder.WebApp.Middleware;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // DI method with injecting custom configuration classes
