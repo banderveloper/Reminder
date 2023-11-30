@@ -59,6 +59,8 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+app.UseCustomExceptionHandler();
+
 app.UseCors("AllowAll");
 
 app.UseAccessTokenTransfer();
@@ -66,7 +68,7 @@ app.UseAccessTokenTransfer();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => DateTime.Now);
+app.MapGet("/", () => DateTime.UtcNow);
 app.MapHub<PromptsHub>("/hub/prompts");
 app.MapControllers();
 

@@ -9,6 +9,8 @@ public enum ErrorCode
 {
     Unknown,
     
+    AuthenticationServiceUnavailable,
+    
     UsernameAlreadyExists,
     UserNotFound,
     
