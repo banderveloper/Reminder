@@ -79,6 +79,39 @@ public class PromptsHub : Hub
         var successResult = Result<long>.Success(disposablePromptId);
         await Clients.Group(GetGroupName(UserId)).SendAsync("GetDeleteDisposablePromptSuccess", successResult);
     }
+
+    public async Task UpdateDisposablePromptAsync(UpdateDisposablePromptRequestModel model)
+    {
+        Console.WriteLine("Update invoked");
+        
+        var getOwnerIdResult = await _disposablePromptService.GetUserIdByPrompt(model.Id);
+
+        if (!getOwnerIdResult.Succeed)
+        {
+            await Clients.Group(GetGroupName(UserId)).SendAsync("GetUpdateDisposablePromptError", getOwnerIdResult);
+            return;
+        }
+
+        var ownerId = getOwnerIdResult.Data;
+       
+        if (ownerId != UserId)
+        {
+            var errorResult = Result<None>.Error(ErrorCode.DisposablePromptProtected);
+            await Clients.Group(GetGroupName(UserId)).SendAsync("GetUpdateDisposablePromptError", errorResult);
+            return;
+        }
+
+        var updatedDisposablePromptResult =
+            await _disposablePromptService.Update(model.Id, model.Title, model.Description, model.ShowsAt);
+
+        if (!updatedDisposablePromptResult.Succeed)
+        {
+            await Clients.Group(GetGroupName(UserId)).SendAsync("GetUpdateDisposablePromptError", updatedDisposablePromptResult);
+            return;
+        }
+        
+        await Clients.Group(GetGroupName(UserId)).SendAsync("GetUpdateDisposablePromptSuccess", updatedDisposablePromptResult);
+    }
     
     private static string GetGroupName(long userId) => "user-" + userId;
 }

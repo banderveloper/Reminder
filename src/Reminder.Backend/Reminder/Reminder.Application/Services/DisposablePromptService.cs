@@ -61,4 +61,24 @@ public class DisposablePromptService : IDisposablePromptService
 
         return Result<None>.Success();
     }
+
+    public async Task<Result<DisposablePrompt>> Update(long disposablePromptId, string title, string? description, DateTime showsAt)
+    {
+        var disposablePrompt = await _context.DisposablePrompts.AsTracking().FirstOrDefaultAsync(dp => dp.Id == disposablePromptId);
+        
+        if(disposablePrompt is null)
+            return Result<DisposablePrompt>.Error(ErrorCode.DisposablePromptNotFound);
+        
+        if (showsAt < DateTime.Now)
+            return Result<DisposablePrompt>.Error(ErrorCode.DisposablePromptBadShowTime);
+
+        disposablePrompt.Title = title;
+        disposablePrompt.Description = description;
+        disposablePrompt.ShowsAt = showsAt;
+        disposablePrompt.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Result<DisposablePrompt>.Success(disposablePrompt);
+    }
 }

@@ -34,4 +34,14 @@ public interface IDisposablePromptService
     /// <param name="disposablePromptId">Id of disposable prompt to delete</param>
     /// <returns>Empty result, or with error</returns>
     Task<Result<None>> DeleteById(long disposablePromptId);
+
+    /// <summary>
+    /// Update existing disposable prompt
+    /// </summary>
+    /// <param name="disposablePromptId">Id of existing disposable prompt</param>
+    /// <param name="title">New title</param>
+    /// <param name="description">New description</param>
+    /// <param name="showsAt">New show time</param>
+    /// <returns>Result with updated disposable prompt, or error</returns>
+    Task<Result<DisposablePrompt>> Update(long disposablePromptId, string title, string? description, DateTime showsAt);
 }
