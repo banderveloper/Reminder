@@ -1,0 +1,20 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+
+    border: 3px solid red;
+}
+
+.navGroup {
+    border: 2px solid green;
+}
+
+.navItem{
+    text-decoration: underline;
+}
+
+.navLogoBlock{
+    display: flex;
+    justify-content: center;
+    max-width: min-content;
+}
