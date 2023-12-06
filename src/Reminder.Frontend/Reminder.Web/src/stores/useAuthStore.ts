@@ -1,22 +1,15 @@
 import {create} from 'zustand'
+import {persist, createJSONStorage} from 'zustand/middleware'
 import {ISignInRequest} from "../interfaces/requests/ISignInRequest.ts";
 import {ISignUpRequest} from "../interfaces/requests/ISignUpRequest.ts";
+import {IAuthStore} from "../interfaces/stores/IAuthStore.ts"
 
-interface IAuthStore {
-    isAuthenticated: boolean;
-    isLoading: boolean;
-
-    signIn: (params: ISignInRequest) => Promise<void>;
-    signUp: (params: ISignUpRequest) => Promise<void>;
-    refresh: () => Promise<void>;
-    signOut: () => Promise<void>;
-}
-
-export const useAuthStore = create<IAuthStore>(() => ({
+export const useAuthStore = create<IAuthStore>()(persist((set, get) => ({
     isAuthenticated: false,
     isLoading: false,
 
     signIn: async (params: ISignInRequest) => {
+        console.log(set, get);
         console.log('sign in')
         console.log(params)
     },
@@ -33,4 +26,7 @@ export const useAuthStore = create<IAuthStore>(() => ({
     signOut: async () => {
         console.log('sign out')
     }
+}), {
+    name: 'reminder-storage',
+    storage: createJSONStorage(() => sessionStorage)
 }));
