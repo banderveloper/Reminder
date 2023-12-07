@@ -19,8 +19,6 @@ public class JwtProvider : IJwtProvider
     {
         _jwtConfiguration = jwtConfiguration;
         _refreshSessionConfiguration = refreshSessionConfiguration;
-        
-        Console.WriteLine($"JWT SECRET KEY: {_jwtConfiguration.SecretKey}");
 
         ValidationParameters = new TokenValidationParameters
         {
