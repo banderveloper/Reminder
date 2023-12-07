@@ -7,6 +7,7 @@ import {IAuthStore} from "../interfaces/stores/IAuthStore.ts"
 export const useAuthStore = create<IAuthStore>()(persist((set, get) => ({
     isAuthenticated: false,
     isLoading: false,
+    errorCode: null,
 
     signIn: async (params: ISignInRequest) => {
         console.log(set, get);
@@ -25,6 +26,10 @@ export const useAuthStore = create<IAuthStore>()(persist((set, get) => ({
 
     signOut: async () => {
         console.log('sign out')
+    },
+
+    checkAuthentication: async() => {
+        console.log('check authentication')
     }
 }), {
     name: 'reminder-storage',
