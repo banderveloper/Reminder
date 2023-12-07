@@ -26,10 +26,6 @@ export const useAuthStore = create<IAuthStore>()(persist((set, get) => ({
 
     signOut: async () => {
         console.log('sign out')
-    },
-
-    checkAuthentication: async() => {
-        console.log('check authentication')
     }
 }), {
     name: 'reminder-storage',

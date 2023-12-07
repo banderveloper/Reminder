@@ -10,5 +10,4 @@ export interface IAuthStore {
     signUp: (params: ISignUpRequest) => Promise<void>;
     refresh: () => Promise<void>;
     signOut: () => Promise<void>;
-    checkAuthentication: () => Promise<void>;
 }
