@@ -18,6 +18,7 @@ const Navbar = () => {
                 <div className={classes.navGroup}>
                     <Link to='/'>Prompts</Link>
                     <Link to='/auth'>Sign in</Link>
+                    <Link to='/signout'>Sign out</Link>
                 </div>
 
             </nav>
