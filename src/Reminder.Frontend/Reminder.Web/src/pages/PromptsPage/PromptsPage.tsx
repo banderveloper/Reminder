@@ -15,7 +15,6 @@ const PromptsPage = () => {
         if(!isAuthenticated) navigate('/auth');
     }, [isAuthenticated]);
 
-
     return (
         <>
             <h1>Prompts page</h1>

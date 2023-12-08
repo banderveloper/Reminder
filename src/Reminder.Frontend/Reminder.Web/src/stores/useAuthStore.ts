@@ -31,7 +31,20 @@ export const useAuthStore = create<IAuthStore>()(persist((set) => ({
 
     signUp: async (params: ISignUpRequest) => {
         console.log('sign up')
-        console.log(params)
+
+        set({isLoading: true});
+
+        const response = await api.post<IServerResponsePayload<object>>(ENDPOINTS.AUTH.SIGN_UP, {
+            username: params.username,
+            password: params.password,
+            fingerprint: params.fingerprint,
+            name: params.name
+        });
+
+        set({isAuthenticated: response.data.succeed});
+        set({errorCode: response.data.errorCode});
+
+        set({isLoading: false});
     },
 
     refresh: async () => {
@@ -49,6 +62,12 @@ export const useAuthStore = create<IAuthStore>()(persist((set) => ({
 
     signOut: async () => {
         console.log('sign out')
+
+        set({isLoading: true});
+
+        await api.post<IServerResponsePayload<object>>(ENDPOINTS.AUTH.SIGN_OUT);
+
+        set({isAuthenticated: false});
     }
 }), {
     name: 'reminder-storage',
