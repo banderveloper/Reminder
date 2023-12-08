@@ -68,6 +68,8 @@ export const useAuthStore = create<IAuthStore>()(persist((set) => ({
         await api.post<IServerResponsePayload<object>>(ENDPOINTS.AUTH.SIGN_OUT);
 
         set({isAuthenticated: false});
+
+        set({isLoading: false});
     }
 }), {
     name: 'reminder-storage',
