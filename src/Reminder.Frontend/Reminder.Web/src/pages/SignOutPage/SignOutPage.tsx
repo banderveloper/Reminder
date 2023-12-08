@@ -9,14 +9,14 @@ const SignOutPage = () => {
 
     useEffect(() => {
 
-        signOut();
+        if(isAuthenticated) signOut();
+        else navigate('/auth');
 
     }, []);
 
     useEffect(() => {
 
-        if (!isAuthenticated)
-            navigate('/auth');
+        if (!isAuthenticated) navigate('/auth');
 
     }, [isAuthenticated]);
 
