@@ -1,7 +1,7 @@
-import {INavbar} from "../../interfaces/components/INavbar.ts";
 import classes from "./Navbar.module.css";
+import {Link} from "react-router-dom";
 
-const Navbar = ({navbarItems}: INavbar) => {
+const Navbar = () => {
 
     return (
         <header>
@@ -16,11 +16,8 @@ const Navbar = ({navbarItems}: INavbar) => {
 
                 {/* Right side with nav items*/}
                 <div className={classes.navGroup}>
-                    {
-                        navbarItems.map(item => (
-                            <a className={classes.navItem} href={item.path} key={item.path}>{item.pathName}</a>
-                        ))
-                    }
+                    <Link to='/'>Prompts</Link>
+                    <Link to='/auth'>Sign in</Link>
                 </div>
 
             </nav>
